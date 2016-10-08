@@ -18,6 +18,14 @@ public class NPC {
 		this.name = name;
 		this.description = description;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "NPC [id=" + id + ", name=" + name + ", description=" + description + "]";
+	}
 	
 	
 }
