@@ -6,12 +6,13 @@ import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.kungfugeek.adventure.db.mongo.NPCRepository;
-import org.kungfugeek.adventure.npc.NPC;
+import org.kungfugeek.adventure.agents.NPC;
+import org.kungfugeek.adventure.agents.NPCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +48,13 @@ public class DBUpdater {
 	 */
 	public DBUpdater() {
 		classLoader = getClass().getClassLoader();
-		currentVersion = versionRepo.findOne(AdventureEngineVersion.SINGLETON_ID);
 	}
 
+	@PostConstruct
+	private void init() {
+		currentVersion = versionRepo.findOne(AdventureEngineVersion.SINGLETON_ID);
+	}
+	
 	/**
 	 * @param versionRepo the versionRepo to set
 	 */
