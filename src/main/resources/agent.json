@@ -1,0 +1,23 @@
+[
+{
+        "name" : "Killroy",
+        "mods" : [
+                {
+                        "attribute" : "STRENGTH",
+                        "mod" : 1,
+                        "_class" : "org.kungfugeek.adventure.agents.AbsoluteModifier"
+                },
+                {
+                        "attribute" : "AGILITY",
+                        "factor" : -0.5,
+                        "_class" : "org.kungfugeek.adventure.agents.RelativeModifier"
+                }
+        ],
+        "attMap" : {
+                "LIFE" : 3,
+                "AGILITY" : 5,
+                "STRENGTH" : 5
+        },
+        "flags" : [ ]
+}
+]

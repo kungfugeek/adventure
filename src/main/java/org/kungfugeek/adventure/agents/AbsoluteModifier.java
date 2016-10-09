@@ -6,43 +6,29 @@ package org.kungfugeek.adventure.agents;
  * @author Nate
  * Oct 8, 2016
  */
-public class AbsoluteModifier implements Modifier {
-	private AgentAttribute attribute;
-	private int mod;
+public class AbsoluteModifier extends Modifier {
+	private int absMod;
+	
+	public AbsoluteModifier() {}
 	
 	public AbsoluteModifier(AgentAttribute attribute, int mod) {
-		super();
-		this.attribute = attribute;
-		this.mod = mod;
+		super(attribute);
+		this.absMod = mod;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.kungfugeek.adventure.agents.Modifier#modify(int)
-	 */
-	public int modify(int baseValue) {
-		return baseValue + mod;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "AbsoluteModifier [attribute=" + attribute + ", mod=" + mod + "]";
-	}
-
-	/**
-	 * @return the attribute
-	 */
-	public AgentAttribute getAttribute() {
-		return attribute;
+		return "AbsoluteModifier [attribute=" + getAttribute() + ", mod=" + absMod + "]";
 	}
 
 	/**
 	 * @return the mod
 	 */
 	public int getMod() {
-		return mod;
+		return absMod;
 	}
 
 }

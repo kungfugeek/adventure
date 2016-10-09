@@ -1,9 +1,9 @@
 package org.kungfugeek.adventure.agents;
 
 public enum AgentAttribute {
-	STRENGTH("strength"),
-	AGILITY("agility"),
-	LIFE("life");
+	STRENGTH("Strength"),
+	AGILITY("Agility"),
+	LIFE("Life");
 	
 	public final String name;
 	

@@ -1,8 +1,10 @@
 package org.kungfugeek.adventure.agents;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,9 +25,127 @@ public class Agent {
 	
 	private String name;	
 	private List<Modifier> mods;
-	
 	private Map<AgentAttribute, Integer> attMap;
+	private Set<String> flags;
 	
+	protected Agent() {
+		mods = new ArrayList<Modifier>(10);
+		attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
+		flags = new HashSet<String>();
+	}
+	
+	protected Agent(String name, Map<AgentAttribute, Integer> atts) {
+		this();
+		this.name = name;
+		attMap.putAll(atts);
+	}
+	
+	protected Agent(Agent other) {
+		this();
+		this.name = other.name;
+		this.mods = new ArrayList<Modifier>(other.mods);
+		this.attMap = new HashMap<AgentAttribute, Integer>(other.attMap);
+	}
+	
+	public void addFlag(String flag) {
+		flags.add(flag);
+	}
+	
+	public void removeFlag(String flag) {
+		flags.remove(flag);
+	}
+	
+	public boolean hasFlag(String flag) {
+		return flags.contains(flag);
+	}
+	
+	public int bumpAttribute(final AgentAttribute att, final int bump) {
+		Integer val = attMap.get(att);
+		if (val == null) val = 0;
+		attMap.put(att, val + bump);
+		return val + bump;
+	}
+
+	public int getEffectiveAttribute(final AgentAttribute att) {
+		return getEffectiveVal(attMap.get(att), att);
+	}
+	
+	private int getEffectiveVal(final int baseVal, final AgentAttribute att) {
+		int absMods = 0;
+		float factor = 1.0f;
+		for (Modifier modifier : mods) {
+			if (att.equals(modifier.getAttribute())) {
+				if (modifier instanceof AbsoluteModifier) {
+					absMods += ((AbsoluteModifier)modifier).getMod();
+				} else if (modifier instanceof RelativeModifier) {
+					factor += ((RelativeModifier)modifier).getFactor();
+				}
+			}
+		}
+		
+		//factors first, then absolutes
+		if (factor < 0.0f) factor = 0.0f;
+		int effectiveVal = (Math.round(baseVal * factor)) + absMods;
+		return effectiveVal >= 0 ? effectiveVal : 0;
+	}
+	
+	/**
+	 * @param mod
+	 */
+	public void addModifier(Modifier mod) {
+		mods.add(mod);
+	}
+	
+	/**
+	 * @param mod
+	 */
+	public boolean removeModifier(Modifier mod) {
+		return mods.remove(mod);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(100);
+		sb.append("Agent ").append(name).append("\n");
+		for (AgentAttribute att : attMap.keySet()) {
+			sb.append("  ").append(att.name).append(": ").append(attMap.get(att)).append(" (").append(getEffectiveAttribute(att)).append(")\n");
+		}
+		sb.append("Mods [\n");
+		for (Modifier mod : mods) {
+			sb.append("  ").append(mod.toString()).append("\n");
+		}
+		sb.append("]\nFlags: ");
+		for (String flag : flags) {
+			sb.append(flag).append(", ");
+		}
+		sb.append("\n");
+		return sb.toString();
+	}
+
+	/**
+	 * @return the mods
+	 */
+	public List<Modifier> getMods() {
+		return mods;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	
+	/**
+	 * adventure
+	 * AgentBuilder
+	 * @author Nate
+	 * Oct 8, 2016
+	 */
 	public static class AgentBuilder {
 		private String name;
 		private Map<AgentAttribute, Integer> attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
@@ -68,77 +188,6 @@ public class Agent {
 
 	}
 	
-	protected Agent() {
-		mods = new ArrayList<Modifier>(10);
-		attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
-	}
-	
-	protected Agent(String name, Map<AgentAttribute, Integer> atts) {
-		this();
-		this.name = name;
-		attMap.putAll(atts);
-	}
-	
-	protected Agent(Agent other) {
-		this.name = other.name;
-		this.mods = new ArrayList<Modifier>(other.mods);
-		this.attMap = new HashMap<AgentAttribute, Integer>(other.attMap);
-	}
-	
-	public int bumpAttribute(final AgentAttribute att, final int bump) {
-		Integer val = attMap.get(att);
-		if (val == null) val = 0;
-		attMap.put(att, val + bump);
-		return val + bump;
-	}
 
-	public int getEffectiveAttribute(final AgentAttribute att) {
-		return getEffectiveVal(attMap.get(att), att);
-	}
-	
-	private int getEffectiveVal(final int baseVal, final AgentAttribute att) {
-		int absMods = 0;
-		float factor = 1.0f;
-		for (Modifier modifier : mods) {
-			if (att.equals(modifier.getAttribute())) {
-				if (modifier instanceof AbsoluteModifier) {
-					absMods += ((AbsoluteModifier)modifier).getMod();
-				} else {
-					factor += ((RelativeModifier)modifier).getFactor();
-				}
-			}
-		}
-		
-		//factors first, then absolutes
-		if (factor < 0.0f) factor = 0.0f;
-		int effectiveVal = (Math.round(baseVal * factor)) + absMods;
-		return effectiveVal >= 0 ? effectiveVal : 0;
-	}
-	
-	public void addModifier(Modifier mod) {
-		mods.add(mod);
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Agent [name=" + name + ", mods=" + mods + ", attMap=" + attMap + "]";
-	}
-
-	/**
-	 * @return the mods
-	 */
-	public List<Modifier> getMods() {
-		return mods;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
 }
 

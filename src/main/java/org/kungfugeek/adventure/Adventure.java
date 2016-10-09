@@ -32,7 +32,7 @@ import com.mongodb.MongoClient;
 public class Adventure extends AbstractMongoConfiguration implements CommandLineRunner {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(Adventure.class);
-	private static final String VERSION = "0.0.2";
+	private static final String VERSION = "0.0.1";
 	
 	@Autowired
 	private NPCRepository repo;
@@ -51,33 +51,9 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 	}
 
 	public void run(String... arg0) throws Exception {		
-		agentRepo.deleteAll();
 		showDB();
-		dbUpdater.initializeToVersion(VERSION);
+		dbUpdater.forceUpdate(VERSION);
 		showDB();
-		
-		Map<AgentAttribute, Integer> atts = new HashMap<AgentAttribute, Integer>();
-		atts.put(STRENGTH, 10);
-		atts.put(LIFE, 10);
-		atts.put(AGILITY, 10);
-		Agent agent = new Agent.AgentBuilder()
-				.setName("Killroy")
-				.setAttribute(STRENGTH, 5)
-				.setAttribute(LIFE, 3)
-				.setAttribute(AGILITY, 5)
-				.build();
-		
-		agentRepo.save(agent);
-		
-		showDB();
-		agent.addModifier(new AbsoluteModifier(AgentAttribute.STRENGTH, 1));
-		//agent.addModifier(new RelativeModifier(AgentAttribute.AGILITY, 2.0f));
-		agent.addModifier(new RelativeModifier(AgentAttribute.AGILITY, -0.5f));
-		agentRepo.save(agent);
-		showDB();
-		for (AgentAttribute att : AgentAttribute.values()) {
-			log("Effective " + att.name + ": " + agent.getEffectiveAttribute(att));
-		}
 	}
 
 	/**
@@ -85,17 +61,17 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 	 */
 	private void showDB() {
 		for (AdventureEngineVersion version : versionRepo.findAll()) {
-			log("Found Version " + version.getVersion());
+			log("Found Version " + version.getVersion() + "\n");
 		}
 		
 		log("NPCs...");
 		for (NPC npc : repo.findAll()) {
-			log(npc.toString());
+			log(npc.toString() + "\n");
 		}
 		
 		log("Agents...");
 		for (Agent agent : agentRepo.findAll()) {
-			log(agent.toString());
+			log(agent.toString() + "\n");
 		}
 	}
 	

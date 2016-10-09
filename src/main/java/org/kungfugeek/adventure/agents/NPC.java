@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author Nate
  *
  */
-@Document(collection = "Agent")
+@Document(collection = "agent")
 public class NPC extends Agent {
 	
 	private String description;

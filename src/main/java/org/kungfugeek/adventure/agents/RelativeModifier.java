@@ -6,21 +6,14 @@ package org.kungfugeek.adventure.agents;
  * @author Nate
  * Oct 8, 2016
  */
-public class RelativeModifier implements Modifier {
-	private AgentAttribute attribute;
-	private float factor;
+public class RelativeModifier extends Modifier {
+	private float modFactor;
+	
+	public RelativeModifier() {}
 	
 	public RelativeModifier(AgentAttribute attribute, float factor) {
-		super();
-		this.attribute = attribute;
-		this.factor = factor;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.kungfugeek.adventure.agents.Modifier#modify(int)
-	 */
-	public int modify(int baseValue) {
-		return Math.round(baseValue * factor);
+		super(attribute);
+		this.modFactor = factor;
 	}
 	
 	/* (non-Javadoc)
@@ -28,21 +21,14 @@ public class RelativeModifier implements Modifier {
 	 */
 	@Override
 	public String toString() {
-		return "RelativeModifier [attribute=" + attribute + ", factor=" + factor + "]";
-	}
-
-	/**
-	 * @return the attribute
-	 */
-	public AgentAttribute getAttribute() {
-		return attribute;
+		return "RelativeModifier [attribute=" + getAttribute() + ", factor=" + modFactor + "]";
 	}
 	
 	/**
 	 * @return the factor
 	 */
 	public float getFactor() {
-		return factor;
+		return modFactor;
 	}
 
 	
