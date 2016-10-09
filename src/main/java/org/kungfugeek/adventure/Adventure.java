@@ -1,21 +1,23 @@
 package org.kungfugeek.adventure;
 
-import static org.kungfugeek.adventure.agents.AgentAttribute.AGILITY;
-import static org.kungfugeek.adventure.agents.AgentAttribute.LIFE;
-import static org.kungfugeek.adventure.agents.AgentAttribute.STRENGTH;
+import static org.kungfugeek.adventure.AgentAttribute.AGILITY;
+import static org.kungfugeek.adventure.AgentAttribute.LIFE;
+import static org.kungfugeek.adventure.AgentAttribute.STRENGTH;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.kungfugeek.adventure.agents.AbsoluteModifier;
 import org.kungfugeek.adventure.agents.Agent;
-import org.kungfugeek.adventure.agents.AgentAttribute;
 import org.kungfugeek.adventure.agents.AgentRepository;
 import org.kungfugeek.adventure.agents.NPC;
 import org.kungfugeek.adventure.agents.NPCRepository;
-import org.kungfugeek.adventure.agents.RelativeModifier;
+import org.kungfugeek.adventure.items.Item;
+import org.kungfugeek.adventure.items.ItemRepository;
+import org.kungfugeek.adventure.modifiers.AbsoluteModifier;
+import org.kungfugeek.adventure.modifiers.RelativeModifier;
+import org.kungfugeek.adventure.options.Option;
 import org.kungfugeek.adventure.versioning.AdventureEngineVersion;
 import org.kungfugeek.adventure.versioning.AdventureEngineVersionRepository;
 import org.kungfugeek.adventure.versioning.DBUpdater;
@@ -46,6 +48,9 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 	@Autowired
 	private AgentRepository agentRepo;
 	
+	@Autowired
+	private ItemRepository itemRepo;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Adventure.class, args);
 	}
@@ -54,6 +59,27 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 		showDB();
 		dbUpdater.forceUpdate(VERSION);
 		showDB();
+//		
+//		Item item = new Item.Builder()
+//				.name("Sword")
+//				.description("A sword.")
+//				.equipable(true)
+//				.equippedMod(new RelativeModifier(AgentAttribute.STRENGTH, 1.5f))
+//				.equippedOptions(new Option.Builder()
+//						.optionText("Swing it.")
+//						.attemptText("You try to swing.")
+//						.failText("You missed.")
+//						.passText("You hit")
+//						.forAdventure(false)
+//						.forCombat(true)
+//						.prereq("Excited")
+//						.prereq(AGILITY, 2, null)
+//						.test(STRENGTH, 4)
+//						.build())
+//				.build();
+//		itemRepo.save(item);
+//		showDB();
+		
 	}
 
 	/**
@@ -72,6 +98,11 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 		log("Agents...");
 		for (Agent agent : agentRepo.findAll()) {
 			log(agent.toString() + "\n");
+		}
+		
+		log("Items..");
+		for (Item item : itemRepo.findAll()) {
+			log(item.toString());
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package org.kungfugeek.adventure.agents;
+package org.kungfugeek.adventure;
 
 public enum AgentAttribute {
 	STRENGTH("Strength"),

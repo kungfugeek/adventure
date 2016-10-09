@@ -1,0 +1,40 @@
+[
+{
+        "name" : "Sword",
+        "description" : "A sword.",
+        "equipable" : true,
+        "carriedMods" : [ ],
+        "equippedMods" : [
+                {
+                        "attribute" : "STRENGTH",
+                        "factor" : 1.5
+                }
+        ],
+        "carriedOptions" : [ ],
+        "equippedOptions" : [
+                {
+                        "prereqs" : [
+                                {
+                                        "flag" : "Excited"
+                                },
+                                {
+                                        "att" : "AGILITY",
+                                        "min" : 2
+                                }
+                        ],
+                        "tests" : [
+                                {
+                                        "testedAttribute" : "STRENGTH",
+                                        "difficulty" : 4
+                                }
+                        ],
+                        "optionText" : "Swing it.",
+                        "attemptText" : "You try to swing.",
+                        "passText" : "You hit",
+                        "failText" : "You missed.",
+                        "forCombat" : true,
+                        "forAdventure" : false
+                }
+        ]
+}
+]

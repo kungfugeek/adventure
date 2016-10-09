@@ -1,31 +1,33 @@
 [
 {
 	name: "Goblin",
-	description: "Not quite as ugly"
+	description: "Not quite as ugly",
+    "mods" : [
+              {
+                      "attribute" : "STRENGTH",
+                      "mod" : 0
+              },
+              {
+                      "attribute" : "AGILITY",
+                      "factor" : 1.0
+              }
+      ],
+      "attMap" : {
+              "LIFE" : 3,
+              "AGILITY" : 6,
+              "STRENGTH" : 7
+      },
+      "flags" : ["Bored"]
 },
 {
     name: "Orc",
-    description: "Even uglier"
-},
-{
-	"name" : "Killroy",
-	"mods" : [
-	        {
-	                "attribute" : "STRENGTH",
-	                "mod" : 1,
-	                "_class" : "org.kungfugeek.adventure.agents.AbsoluteModifier"
-	        },
-	        {
-	                "attribute" : "AGILITY",
-	                "factor" : -0.5,
-	                "_class" : "org.kungfugeek.adventure.agents.RelativeModifier"
-	        }
-	],
-	"attMap" : {
-	        "LIFE" : 3,
-	        "AGILITY" : 5,
-	        "STRENGTH" : 5
-	},
-	"flags" : ["Excited"]
+    description: "Even uglier",
+    "mods" : [ ],
+      "attMap" : {
+              "LIFE" : 3,
+              "AGILITY" : 2,
+              "STRENGTH" : 5
+      },
+      "flags" : ["Ugly"]
 }
 ]

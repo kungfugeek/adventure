@@ -1,4 +1,7 @@
-package org.kungfugeek.adventure.agents;
+package org.kungfugeek.adventure.modifiers;
+
+import org.kungfugeek.adventure.AgentAttribute;
+import org.kungfugeek.adventure.agents.Agent;
 
 import com.google.gson.annotations.SerializedName;
 

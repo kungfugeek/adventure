@@ -15,10 +15,13 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.kungfugeek.adventure.agents.Agent;
 import org.kungfugeek.adventure.agents.AgentRepository;
-import org.kungfugeek.adventure.agents.Modifier;
 import org.kungfugeek.adventure.agents.NPC;
 import org.kungfugeek.adventure.agents.NPCRepository;
+import org.kungfugeek.adventure.items.Item;
+import org.kungfugeek.adventure.items.ItemRepository;
+import org.kungfugeek.adventure.modifiers.Modifier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -45,6 +48,9 @@ public class DBUpdater {
 	
 	@Autowired
 	private AgentRepository agentRepo;
+	
+	@Autowired
+	private ItemRepository itemRepo;
 	
 	private Gson gson;
 
@@ -78,9 +84,20 @@ public class DBUpdater {
 	}
 	
 	public void forceUpdate(String targetVersion) throws Exception {
-		//updateAgentRepo();
+		clearRepos();
 		updateNPCRepo();
+		updateAgentRepo();
+		updateItemRepo();
 		updateVersion(targetVersion);
+	}
+
+	/**
+	 * 
+	 */
+	private void clearRepos() {
+		npcRepo.deleteAll();
+		agentRepo.deleteAll();
+		itemRepo.deleteAll();
 	}
 	
 	public void updateVersion(String targetVersion) {
@@ -89,23 +106,32 @@ public class DBUpdater {
 	}
 	
 	public void updateNPCRepo() throws Exception {
-		npcRepo.deleteAll();
 		JsonReader jsonReader = getJSONReader("npc.json");
 		NPC[] npcs = gson.fromJson(jsonReader, NPC[].class);
-		npcRepo.insert(Arrays.asList(npcs));
+		List<NPC> npcList = Arrays.asList(npcs);
+		npcRepo.save(npcList);
+	}
+	
+	public void updateItemRepo() throws Exception {
+		JsonReader jsonReader = getJSONReader("items.json");
+		Item[] items = gson.fromJson(jsonReader, Item[].class);
+		List<Item> itemList = Arrays.asList(items);
+		itemRepo.save(itemList);
 	}
 	
 	public void updateAgentRepo() throws Exception {
-		agentRepo.deleteAll();
 		JsonReader jsonReader = getJSONReader("agent.json");
 		Agent[] agents = gson.fromJson(jsonReader, Agent[].class);
+		List<Modifier> mods = new ArrayList<Modifier>(10);
 		for (Agent agent : agents) {
-			List<Modifier> mods = new ArrayList<Modifier>(agent.getMods());
+			mods.clear();
+			mods.addAll(agent.getMods());
 			for (Modifier mod : mods) {
 				mod.addToAgent(agent);
 			}
 		}
-		agentRepo.insert(Arrays.asList(agents));
+		List<Agent> agentList = Arrays.asList(agents);
+		agentRepo.save(agentList);
 	}
 	
 	/**

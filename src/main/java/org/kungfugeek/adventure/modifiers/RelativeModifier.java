@@ -1,4 +1,6 @@
-package org.kungfugeek.adventure.agents;
+package org.kungfugeek.adventure.modifiers;
+
+import org.kungfugeek.adventure.AgentAttribute;
 
 /**
  * adventure

@@ -1,5 +1,6 @@
 package org.kungfugeek.adventure.agents;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +9,14 @@ import java.util.Set;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.kungfugeek.adventure.AgentAttribute;
+import org.kungfugeek.adventure.modifiers.AbsoluteModifier;
+import org.kungfugeek.adventure.modifiers.Modifier;
+import org.kungfugeek.adventure.modifiers.RelativeModifier;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  * adventure
@@ -23,7 +31,11 @@ public class Agent {
 	@Id
 	private String id;
 	
+	@Indexed
 	private String name;	
+	
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private Date createdDate;
 	private List<Modifier> mods;
 	private Map<AgentAttribute, Integer> attMap;
 	private Set<String> flags;
@@ -32,6 +44,7 @@ public class Agent {
 		mods = new ArrayList<Modifier>(10);
 		attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
 		flags = new HashSet<String>();
+		createdDate = new Date();
 	}
 	
 	protected Agent(String name, Map<AgentAttribute, Integer> atts) {
