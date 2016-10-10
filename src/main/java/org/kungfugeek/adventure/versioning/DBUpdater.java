@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,11 +18,9 @@ import org.kungfugeek.adventure.agents.NPC;
 import org.kungfugeek.adventure.agents.NPCRepository;
 import org.kungfugeek.adventure.items.Item;
 import org.kungfugeek.adventure.items.ItemRepository;
-import org.kungfugeek.adventure.modifiers.Modifier;
-import org.kungfugeek.adventure.scenes.Scene;
-import org.kungfugeek.adventure.scenes.SceneRepository;
+import org.kungfugeek.adventure.scenes.ScenePack;
+import org.kungfugeek.adventure.scenes.ScenePackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -55,7 +52,7 @@ public class DBUpdater {
 	private ItemRepository itemRepo;
 	
 	@Autowired
-	private SceneRepository sceneRepo;
+	private ScenePackRepository sceneRepo;
 	
 	private Gson gson;
 
@@ -135,8 +132,8 @@ public class DBUpdater {
 	
 	public void updateSceneRepo() throws Exception {
 		JsonReader jsonReader = getJSONReader("scenes.json");
-		Scene[] scenes = gson.fromJson(jsonReader, Scene[].class);
-		List<Scene> sceneList = Arrays.asList(scenes);
+		ScenePack[] scenes = gson.fromJson(jsonReader, ScenePack[].class);
+		List<ScenePack> sceneList = Arrays.asList(scenes);
 		sceneRepo.save(sceneList);
 	}
 	

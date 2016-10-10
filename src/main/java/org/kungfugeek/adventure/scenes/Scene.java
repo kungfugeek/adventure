@@ -11,7 +11,6 @@ import java.util.Set;
 import org.kungfugeek.adventure.agents.NPC;
 import org.kungfugeek.adventure.combat.CombatResult;
 import org.kungfugeek.adventure.options.Option;
-import org.springframework.data.annotation.Id;
 
 /**
  * adventure
@@ -20,9 +19,6 @@ import org.springframework.data.annotation.Id;
  * Oct 9, 2016
  */
 public class Scene {
-
-	@Id
-	private String id;
 
 	private String title;
 	private String text;

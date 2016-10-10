@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author Nate
  * Oct 9, 2016
  */
-public interface SceneRepository extends MongoRepository<Scene, String> {
+public interface ScenePackRepository extends MongoRepository<ScenePack, String> {
 
 }
 

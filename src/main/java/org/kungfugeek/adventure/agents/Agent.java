@@ -1,5 +1,6 @@
 package org.kungfugeek.adventure.agents;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +54,11 @@ public class Agent {
 		attMap.putAll(builder.attMap);
 		flags.addAll(builder.flags);
 	}
-		
+	
+	public void addFlags(Collection<String> flags) {
+		this.flags.addAll(flags);
+	}
+	
 	public void addFlag(String flag) {
 		flags.add(flag);
 	}
@@ -116,8 +121,16 @@ public class Agent {
 	 * @param mod
 	 */
 	public void removeModifier(Modifier mod) {
-		setEffectiveAtts();
 		mods.remove(mod);
+		setEffectiveAtts();
+	}
+	
+	/**
+	 * @param mods
+	 */
+	public void addModifiers(Collection<Modifier> mods) {
+		this.mods.addAll(mods);
+		setEffectiveAtts();
 	}
 	
 	/* (non-Javadoc)

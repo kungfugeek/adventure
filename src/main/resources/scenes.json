@@ -1,62 +1,59 @@
 [
 {
-        "title" : "The Wall",
-        "text" : "You are standing in front of a wall.  Or maybe you are the wall.",
-        "options" : [
-                {
-                        "prereqs" : [ ],
-                        "tests" : [
-                                {
-                                        "testedAttribute" : "STRENGTH",
-                                        "difficulty" : 3
-                                }
-                        ],
-                        "optionText" : "Climb it.",
-                        "passTargetScene" : "CLIMBED",
-                        "failTargetScene" : "FELL",
-                        "forCombat" : false,
-                        "forAdventure" : false
+        "title" : "Wall Scene",
+        "scenes" : {
+                "Fell" : {
+                        "title" : "Fell",
+                        "text" : "You fell down and got hurt on your butt.",
+                        "effects" : [{"mods" : [{"attribute" : "AGILITY", "factor" : 0, "mod" : -1}]}]
                 },
-                {
-                        "prereqs" : [ ],
-                        "tests" : [
-                                {
-                                        "testedAttribute" : "AGILITY",
-                                        "difficulty" : 3
-                                }
-                        ],
-                        "optionText" : "Go around it.",
-                        "passTargetScene" : "AROUND",
-                        "failTargetScene" : "TIRED",
-                        "forCombat" : false,
-                        "forAdventure" : false
+                "Climbed" : {
+                        "title" : "Climbed",
+                        "text" : "You are standing on top of a wall.",
+                        "effects" : [{"flags" : ["High"]}]
+                },
+                "Walked" : {
+                        "title" : "Walked",
+                        "text" : "You walked around and got tired.",
+                        "effects" : [{"bumpMap" : {"LIFE" : -1}}]
                 }
-        ],
-        "effects" : [
-                {
-                        "mods" : [ ],
-                        "flags" : [
-                                "Silly"
-                        ]
-                }
-        ],
-        "npcs" : [
-                {
-                        "description" : "A cute little robot.",
-                        "name" : "Wally",
-                        "mods" : [ ],
-                        "attMap" : {
-
+        },
+        "openingScene" : {
+                "title" : "Opening Wall Scene",
+                "text" : "You are standing in front of a wall.",
+                "options" : [{
+                                "prereqs" : [
+                                        { "flag" : "Blocked"},
+                                        { "att" : "STRENGTH",
+                                           "min" : 2
+                                        }],
+                                "tests" : [
+                                        {"testedAttribute" : "STRENGTH",
+                                         "difficulty" : 5
+                                        }],
+                                "optionText" : "Climb it.",
+                                "attemptText" : "You try to climb it.",
+                                "passTargetScene" : "Climbed",
+                                "failTargetScene" : "Fell",
+                                "forCombat" : false,
+                                "forAdventure" : false
                         },
-                        "effectiveAtts" : {
-
-                        },
-                        "flags" : [ ]
-                }
-        ],
-        "combatResultMap" : {
-                "PLAYER_VICTORY" : "YOUWIN",
-                "ENEMY_FLEE" : "THEYFLEE"
+                        {
+                                "optionText" : "Go around it.",
+                                "passTargetScene" : "Walked",
+                                "forCombat" : false,
+                                "forAdventure" : false
+                        }
+                ],
+                "effects" : [{"flags" : ["Blocked"]}],
+                "npcs" : [{
+                                "description" : "A cute little robot.",
+                                "name" : "Wally",
+                                "attMap" : {"STRENGTH" : 1},
+                                "flags" : ["Boxy"]
+                        }],
+                "combatResultMap" : {"ENEMY_FLEE" : "They Flee",
+                                     "ENEMY_SURRENDER" : "You Win"}
         }
-}
+}        
 ]
