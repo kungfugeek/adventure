@@ -10,9 +10,7 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.kungfugeek.adventure.AgentAttribute;
-import org.kungfugeek.adventure.modifiers.AbsoluteModifier;
 import org.kungfugeek.adventure.modifiers.Modifier;
-import org.kungfugeek.adventure.modifiers.RelativeModifier;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,28 +36,24 @@ public class Agent {
 	private Date createdDate;
 	private List<Modifier> mods;
 	private Map<AgentAttribute, Integer> attMap;
+	private Map<AgentAttribute, Integer> effectiveAtts;
 	private Set<String> flags;
 	
 	protected Agent() {
 		mods = new ArrayList<Modifier>(10);
 		attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
+		effectiveAtts = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
 		flags = new HashSet<String>();
 		createdDate = new Date();
 	}
 	
-	protected Agent(String name, Map<AgentAttribute, Integer> atts) {
+	protected Agent(Builder builder) {
 		this();
-		this.name = name;
-		attMap.putAll(atts);
+		this.name = builder.name;
+		attMap.putAll(builder.attMap);
+		flags.addAll(builder.flags);
 	}
-	
-	protected Agent(Agent other) {
-		this();
-		this.name = other.name;
-		this.mods = new ArrayList<Modifier>(other.mods);
-		this.attMap = new HashMap<AgentAttribute, Integer>(other.attMap);
-	}
-	
+		
 	public void addFlag(String flag) {
 		flags.add(flag);
 	}
@@ -76,30 +70,38 @@ public class Agent {
 		Integer val = attMap.get(att);
 		if (val == null) val = 0;
 		attMap.put(att, val + bump);
+		setEffectiveAtts();
 		return val + bump;
 	}
 
 	public int getEffectiveAttribute(final AgentAttribute att) {
-		return getEffectiveVal(attMap.get(att), att);
+		if (effectiveAtts.isEmpty()) {
+			setEffectiveAtts();
+		}
+		return effectiveAtts.get(att);
 	}
 	
-	private int getEffectiveVal(final int baseVal, final AgentAttribute att) {
-		int absMods = 0;
-		float factor = 1.0f;
+	private void setEffectiveAtts() {
+		
+		effectiveAtts.clear();
+		effectiveAtts.putAll(attMap);
+		
+		//factors first
 		for (Modifier modifier : mods) {
-			if (att.equals(modifier.getAttribute())) {
-				if (modifier instanceof AbsoluteModifier) {
-					absMods += ((AbsoluteModifier)modifier).getMod();
-				} else if (modifier instanceof RelativeModifier) {
-					factor += ((RelativeModifier)modifier).getFactor();
-				}
-			}
+			AgentAttribute att = modifier.getAttribute();
+			int currVal = effectiveAtts.get(att);
+			currVal = Math.round(currVal * modifier.getFactor());
+			effectiveAtts.put(att, currVal);
 		}
 		
-		//factors first, then absolutes
-		if (factor < 0.0f) factor = 0.0f;
-		int effectiveVal = (Math.round(baseVal * factor)) + absMods;
-		return effectiveVal >= 0 ? effectiveVal : 0;
+		//then absolutes
+		for (Modifier modifier : mods) {
+			AgentAttribute att = modifier.getAttribute();
+			int currVal = effectiveAtts.get(att);
+			currVal += modifier.getMod();
+			effectiveAtts.put(att, currVal);
+		}
+		
 	}
 	
 	/**
@@ -107,13 +109,15 @@ public class Agent {
 	 */
 	public void addModifier(Modifier mod) {
 		mods.add(mod);
+		setEffectiveAtts();
 	}
 	
 	/**
 	 * @param mod
 	 */
-	public boolean removeModifier(Modifier mod) {
-		return mods.remove(mod);
+	public void removeModifier(Modifier mod) {
+		setEffectiveAtts();
+		mods.remove(mod);
 	}
 	
 	/* (non-Javadoc)
@@ -159,46 +163,32 @@ public class Agent {
 	 * @author Nate
 	 * Oct 8, 2016
 	 */
-	public static class AgentBuilder {
+	public static class Builder {
 		private String name;
 		private Map<AgentAttribute, Integer> attMap = new HashMap<AgentAttribute, Integer>(AgentAttribute.values().length);
-		
+		private Set<String> flags = new HashSet<String>(1);
+	
 		public Agent build() {
-			return new Agent(name, attMap);
+			return new Agent(this);
 		}
-		
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return name;
-		}
+
 		/**
 		 * @param name the name to set
 		 */
-		public AgentBuilder setName(String name) {
+		public Builder name(String name) {
 			this.name = name;
 			return this;
 		}
-		/**
-		 * @return the attMap
-		 */
-		public Map<AgentAttribute, Integer> getAttMap() {
-			return attMap;
-		}
-		/**
-		 * @param attMap the attMap to set
-		 */
-		public AgentBuilder setAttMap(Map<AgentAttribute, Integer> attMap) {
-			this.attMap = attMap;
-			return this;
-		}
 		
-		public AgentBuilder setAttribute(AgentAttribute att, int val) {
+		public Builder attribute(AgentAttribute att, int val) {
 			attMap.put(att, val);
 			return this;
 		}
 
+		public Builder flag(String flag) {
+			flags.add(flag);
+			return this;
+		}
 	}
 	
 

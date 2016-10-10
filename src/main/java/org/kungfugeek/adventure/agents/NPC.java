@@ -13,9 +13,9 @@ public class NPC extends Agent {
 	
 	private NPC() {}
 	
-	private NPC(Agent agent, String description) {
-		super(agent);
-		this.description = description;
+	private NPC(NPCBuilder builder) {
+		super(builder);
+		this.description = builder.description;
 	}
 	
 	/* (non-Javadoc)
@@ -33,7 +33,7 @@ public class NPC extends Agent {
 		return description;
 	}
 
-	public static class NPCBuilder extends AgentBuilder {
+	public static class NPCBuilder extends Agent.Builder {
 		private String description;
 
 		public NPCBuilder() {
@@ -41,21 +41,15 @@ public class NPC extends Agent {
 		}
 		
 		public NPC build() {
-			return new NPC(super.build(), this.description);
-		}
-
-		/**
-		 * @return the description
-		 */
-		public String getDescription() {
-			return description;
+			return new NPC(this);
 		}
 
 		/**
 		 * @param description the description to set
 		 */
-		public void setDescription(String description) {
+		public Builder description(String description) {
 			this.description = description;
+			return this;
 		}
 		
 	}

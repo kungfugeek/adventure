@@ -46,6 +46,7 @@ public class Option {
 			this.flag = flag;
 		}
 		
+		@SuppressWarnings("unused")
 		public Prerequisite() {}
 		
 		public boolean meets(Agent agent) {
@@ -91,6 +92,8 @@ public class Option {
 	private String attemptText;
 	private String passText;
 	private String failText;
+	private String passTargetScene;
+	private String failTargetScene;
 	private boolean forCombat;
 	private boolean forAdventure;
 
@@ -130,6 +133,20 @@ public class Option {
 	}
 
 	/**
+	 * @return the passTargetScene
+	 */
+	public String getPassTargetScene() {
+		return passTargetScene;
+	}
+
+	/**
+	 * @return the failTargetScene
+	 */
+	public String getFailTargetScene() {
+		return failTargetScene;
+	}
+
+	/**
 	 * @return the optionText
 	 */
 	public String getOptionText() {
@@ -164,6 +181,8 @@ public class Option {
 		private String attemptText;
 		private String passText;
 		private String failText;
+		private String passScene;
+		private String failScene;
 		private boolean forCombat;
 		private boolean forAdventure;
 
@@ -207,6 +226,22 @@ public class Option {
 			return this;
 		}
 
+		/**
+		 * @param passScene the passScene to set
+		 */
+		public Builder passScene(String passScene) {
+			this.passScene = passScene;
+			return this;
+		}
+
+		/**
+		 * @param failScene the failScene to set
+		 */
+		public Builder failScene(String failScene) {
+			this.failScene = failScene;
+			return this;
+		}
+
 		public Builder forCombat(boolean forCombat) {
 			this.forCombat = forCombat;
 			return this;
@@ -228,7 +263,9 @@ public class Option {
 		this.optionText = builder.optionText;
 		this.attemptText = builder.attemptText;
 		this.passText = builder.passText;
+		this.passTargetScene = builder.passScene;
 		this.failText = builder.failText;
+		this.failTargetScene = builder.failScene;
 		this.forCombat = builder.forCombat;
 		this.forAdventure = builder.forAdventure;
 	}

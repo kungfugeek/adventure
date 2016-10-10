@@ -15,27 +15,31 @@ public class Modifier {
 	@SerializedName("attribute")
 	private AgentAttribute attribute;
 	@SerializedName("factor")
-	private Float factor;
+	private float factor;
 	@SerializedName("mod")
-	private Integer mod;
+	private int mod;
 	
-	public Modifier() {}
-	
-	public Modifier(AgentAttribute attribute) {
-		this.attribute = attribute;
+	public Modifier() {
+		factor = 1.0f;
 	}
 	
 	public AgentAttribute getAttribute() {
 		return attribute;
 	}
 
-	public void addToAgent(Agent agent) {
-		agent.removeModifier(this);
-		if (mod != null) {
-			agent.addModifier(new AbsoluteModifier(attribute, mod));
-		} else if (factor != null) {
-			agent.addModifier(new RelativeModifier(attribute, factor));
-		}
+	/**
+	 * @return the mod
+	 */
+	public int getMod() {
+		return mod;
 	}
+
+	/**
+	 * @return the factor
+	 */
+	public float getFactor() {
+		return factor;
+	}
+
 }
 

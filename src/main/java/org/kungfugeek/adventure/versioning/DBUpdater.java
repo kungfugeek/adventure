@@ -20,6 +20,8 @@ import org.kungfugeek.adventure.agents.NPCRepository;
 import org.kungfugeek.adventure.items.Item;
 import org.kungfugeek.adventure.items.ItemRepository;
 import org.kungfugeek.adventure.modifiers.Modifier;
+import org.kungfugeek.adventure.scenes.Scene;
+import org.kungfugeek.adventure.scenes.SceneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
@@ -51,6 +53,9 @@ public class DBUpdater {
 	
 	@Autowired
 	private ItemRepository itemRepo;
+	
+	@Autowired
+	private SceneRepository sceneRepo;
 	
 	private Gson gson;
 
@@ -88,6 +93,7 @@ public class DBUpdater {
 		updateNPCRepo();
 		updateAgentRepo();
 		updateItemRepo();
+		updateSceneRepo();
 		updateVersion(targetVersion);
 	}
 
@@ -98,6 +104,7 @@ public class DBUpdater {
 		npcRepo.deleteAll();
 		agentRepo.deleteAll();
 		itemRepo.deleteAll();
+		sceneRepo.deleteAll();
 	}
 	
 	public void updateVersion(String targetVersion) {
@@ -122,16 +129,15 @@ public class DBUpdater {
 	public void updateAgentRepo() throws Exception {
 		JsonReader jsonReader = getJSONReader("agent.json");
 		Agent[] agents = gson.fromJson(jsonReader, Agent[].class);
-		List<Modifier> mods = new ArrayList<Modifier>(10);
-		for (Agent agent : agents) {
-			mods.clear();
-			mods.addAll(agent.getMods());
-			for (Modifier mod : mods) {
-				mod.addToAgent(agent);
-			}
-		}
 		List<Agent> agentList = Arrays.asList(agents);
 		agentRepo.save(agentList);
+	}
+	
+	public void updateSceneRepo() throws Exception {
+		JsonReader jsonReader = getJSONReader("scenes.json");
+		Scene[] scenes = gson.fromJson(jsonReader, Scene[].class);
+		List<Scene> sceneList = Arrays.asList(scenes);
+		sceneRepo.save(sceneList);
 	}
 	
 	/**

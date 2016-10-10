@@ -1,0 +1,62 @@
+[
+{
+        "title" : "The Wall",
+        "text" : "You are standing in front of a wall.  Or maybe you are the wall.",
+        "options" : [
+                {
+                        "prereqs" : [ ],
+                        "tests" : [
+                                {
+                                        "testedAttribute" : "STRENGTH",
+                                        "difficulty" : 3
+                                }
+                        ],
+                        "optionText" : "Climb it.",
+                        "passTargetScene" : "CLIMBED",
+                        "failTargetScene" : "FELL",
+                        "forCombat" : false,
+                        "forAdventure" : false
+                },
+                {
+                        "prereqs" : [ ],
+                        "tests" : [
+                                {
+                                        "testedAttribute" : "AGILITY",
+                                        "difficulty" : 3
+                                }
+                        ],
+                        "optionText" : "Go around it.",
+                        "passTargetScene" : "AROUND",
+                        "failTargetScene" : "TIRED",
+                        "forCombat" : false,
+                        "forAdventure" : false
+                }
+        ],
+        "effects" : [
+                {
+                        "mods" : [ ],
+                        "flags" : [
+                                "Silly"
+                        ]
+                }
+        ],
+        "npcs" : [
+                {
+                        "description" : "A cute little robot.",
+                        "name" : "Wally",
+                        "mods" : [ ],
+                        "attMap" : {
+
+                        },
+                        "effectiveAtts" : {
+
+                        },
+                        "flags" : [ ]
+                }
+        ],
+        "combatResultMap" : {
+                "PLAYER_VICTORY" : "YOUWIN",
+                "ENEMY_FLEE" : "THEYFLEE"
+        }
+}
+]
