@@ -98,7 +98,7 @@ public class DBUpdater {
 	 * 
 	 */
 	private void clearRepos() {
-		npcRepo.deleteAll();
+		//npcRepo.deleteAll();
 		agentRepo.deleteAll();
 		itemRepo.deleteAll();
 		sceneRepo.deleteAll();

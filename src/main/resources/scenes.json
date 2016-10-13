@@ -1,59 +1,38 @@
 [
 {
-        "title" : "Wall Scene",
-        "scenes" : {
-                "Fell" : {
+        "title" : "Wall Scene Pack",
+        "scenes" : {"Fell" : {
                         "title" : "Fell",
                         "text" : "You fell down and got hurt on your butt.",
-                        "effects" : [{"mods" : [{"attribute" : "AGILITY", "factor" : 0, "mod" : -1}]}]
-                },
+                        "effects" : [{"mods" : [{"attribute" : "AGILITY", "factor" : 0, "mod" : -1}]}]},
                 "Climbed" : {
                         "title" : "Climbed",
                         "text" : "You are standing on top of a wall.",
-                        "effects" : [{"flags" : ["High"]}]
-                },
+                        "effects" : [{"flags" : ["High"]}]},
                 "Walked" : {
                         "title" : "Walked",
                         "text" : "You walked around and got tired.",
-                        "effects" : [{"bumpMap" : {"LIFE" : -1}}]
-                }
-        },
+                        "effects" : [{"bumpMap" : {"LIFE" : -1}}]}},
         "openingScene" : {
                 "title" : "Opening Wall Scene",
                 "text" : "You are standing in front of a wall.",
-                "options" : [{
-                                "prereqs" : [
-                                        { "flag" : "Blocked"},
-                                        { "att" : "STRENGTH",
-                                           "min" : 2
-                                        }],
-                                "tests" : [
-                                        {"testedAttribute" : "STRENGTH",
-                                         "difficulty" : 5
-                                        }],
-                                "optionText" : "Climb it.",
+                "options" : [{"optionText" : "Climb it.",
+                                "prereqs" : [{ "flag" : "HasArms"},
+                                            { "att" : "STRENGTH",
+                                              "min" : 2}],
+                                "tests" : [{"testedAttribute" : "STRENGTH",
+                                            "difficulty" : 5}],
                                 "attemptText" : "You try to climb it.",
                                 "passTargetScene" : "Climbed",
-                                "failTargetScene" : "Fell",
-                                "forCombat" : false,
-                                "forAdventure" : false
-                        },
-                        {
-                                "optionText" : "Go around it.",
-                                "passTargetScene" : "Walked",
-                                "forCombat" : false,
-                                "forAdventure" : false
-                        }
-                ],
+                                "failTargetScene" : "Fell"},
+                        {"optionText" : "Go around it.",
+                         "passTargetScene" : "Walked"}],
                 "effects" : [{"flags" : ["Blocked"]}],
-                "npcs" : [{
-                                "description" : "A cute little robot.",
-                                "name" : "Wally",
-                                "attMap" : {"STRENGTH" : 1},
-                                "flags" : ["Boxy"]
-                        }],
+                "npcs" : [{"description" : "A cute little robot.",
+                            "name" : "Wally",
+                            "attMap" : {"STRENGTH" : 1},
+                            "flags" : ["Boxy"]}],
                 "combatResultMap" : {"ENEMY_FLEE" : "They Flee",
-                                     "ENEMY_SURRENDER" : "You Win"}
-        }
+                                     "ENEMY_SURRENDER" : "You Win"}}
 }        
 ]

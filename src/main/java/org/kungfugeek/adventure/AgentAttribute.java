@@ -3,7 +3,8 @@ package org.kungfugeek.adventure;
 public enum AgentAttribute {
 	STRENGTH("Strength"),
 	AGILITY("Agility"),
-	LIFE("Life");
+	LIFE("Life"),
+	ENERGY("Energy");
 	
 	public final String name;
 	
