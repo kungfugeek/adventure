@@ -26,7 +26,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
-
+import static org.kungfugeek.adventure.combat.CombatResult.Outcome.*;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
@@ -87,14 +87,14 @@ public class Adventure extends AbstractMongoConfiguration implements CommandLine
 								.passScene("Climbed")
 								.prereq("Blocked")
 								.prereq(STRENGTH, 2, null)
-								.test(STRENGTH, 5)
+								.passiveTest(STRENGTH, 5)
 								.build())
 						.option(new Option.Builder()
 								.optionText("Go around it.")
 								.passScene("Walked")
 								.build())
-						.result(CombatResult.ENEMY_FLEE, "They Flee")
-						.result(CombatResult.PLAYER_VICTORY, "You Win")
+						.result(ENEMY_FLEE.create(), "They Flee")
+						.result(PLAYER_VICTORY.create(), "You Win")
 						.build())
 				.scene(new Scene.Builder()
 						.title("Climbed")

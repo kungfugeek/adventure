@@ -7,7 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author Nate
  * Oct 8, 2016
  */
-public interface AgentRepository extends MongoRepository<Agent, String> {
-
-}
+public interface AgentRepository extends MongoRepository<Agent, String> {}
 

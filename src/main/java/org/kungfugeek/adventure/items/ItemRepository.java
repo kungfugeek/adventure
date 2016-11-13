@@ -7,7 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @author Nate
  * Oct 9, 2016
  */
-public interface ItemRepository extends MongoRepository<Item, String> {
-
-}
+public interface ItemRepository extends MongoRepository<Item, String> {}
 

@@ -66,16 +66,16 @@ public class Option {
 			return agent.hasFlag(flag);
 		}
 	}
-
-	private static class Test {
-		private AgentAttribute testedAttribute;
-		private int difficulty;
+	
+	private static class PassiveTest {
+		private final AgentAttribute testedAttribute;
+		private final int difficulty;
 
 		/**
 		 * @param att
 		 * @param diff
 		 */
-		public Test(AgentAttribute testedAttribute, int difficulty) {
+		public PassiveTest(AgentAttribute testedAttribute, int difficulty) {
 			this.testedAttribute = testedAttribute;
 			this.difficulty = difficulty;
 		}
@@ -85,9 +85,27 @@ public class Option {
 			return rand.nextInt(effectiveAtt + difficulty) < effectiveAtt;
 		}
 	}
+	
+	private static class OpposedTest {
+		private final AgentAttribute testedAttribute;
+		private final AgentAttribute opposingAttribute;
+		
+		public OpposedTest(AgentAttribute testedAttribute, AgentAttribute opposingAttribute) {
+			super();
+			this.testedAttribute = testedAttribute;
+			this.opposingAttribute = opposingAttribute;
+		}
+		
+		public boolean attempt(Agent actor, Agent opposer) {
+			int effectiveActorAtt = actor.getEffectiveAttribute(testedAttribute);
+			int opposingAtt = opposer.getEffectiveAttribute(opposingAttribute);
+			return rand.nextInt(effectiveActorAtt + opposingAtt) < opposingAtt;
+		}
+	}
 
 	private List<Prerequisite> prereqs;
-	private List<Test> tests;
+	private List<PassiveTest> passiveTests;
+	private List<OpposedTest> opposedTests;
 	private String optionText;
 	private String attemptText;
 	private String passText;
@@ -112,8 +130,9 @@ public class Option {
 	}
 
 	private Option() {
-		prereqs = new ArrayList<Option.Prerequisite>(3);
-		tests = new ArrayList<Option.Test>(1);
+		prereqs = new ArrayList<>(3);
+		passiveTests = new ArrayList<>(1);
+		opposedTests = new ArrayList<>(1);
 	}
 
 	public boolean meetsPrereqs(Agent agent) {
@@ -124,10 +143,13 @@ public class Option {
 		return meets;
 	}
 
-	public boolean attempt(Agent agent) {
+	public boolean attempt(Agent actor, Agent opposer) {
 		boolean success = true;
-		for (Test test : tests) {
-			success = success && test.attempt(agent);
+		for (PassiveTest test : passiveTests) {
+			success = success && test.attempt(actor);
+		}
+		for (OpposedTest test : opposedTests) {
+			success = success && test.attempt(actor, opposer);
 		}
 		return success;
 	}
@@ -176,7 +198,8 @@ public class Option {
 
 	public static class Builder {
 		private List<Prerequisite> prereqs;
-		private List<Test> tests;
+		private List<PassiveTest> passiveTests;
+		private List<OpposedTest> opposedTests;
 		private String optionText;
 		private String attemptText;
 		private String passText;
@@ -187,8 +210,9 @@ public class Option {
 		private boolean forAdventure;
 
 		public Builder() {
-			prereqs = new ArrayList<Option.Prerequisite>(1);
-			tests = new ArrayList<Option.Test>(1);
+			prereqs = new ArrayList<>(1);
+			passiveTests = new ArrayList<>(1);
+			opposedTests = new ArrayList<>(1);
 		}
 		
 		public Builder prereq(String flag) {
@@ -201,8 +225,13 @@ public class Option {
 			return this;
 		}
 
-		public Builder test(AgentAttribute att, int diff) {
-			this.tests.add(new Test(att, diff));
+		public Builder passiveTest(AgentAttribute att, int diff) {
+			this.passiveTests.add(new PassiveTest(att, diff));
+			return this;
+		}
+		
+		public Builder opposedTest(AgentAttribute actorAtt, AgentAttribute opposingAtt) {
+			this.opposedTests.add(new OpposedTest(actorAtt, opposingAtt));
 			return this;
 		}
 
@@ -259,7 +288,7 @@ public class Option {
 
 	private Option(Builder builder) {
 		this.prereqs = Collections.unmodifiableList(builder.prereqs);
-		this.tests = Collections.unmodifiableList(builder.tests);
+		this.passiveTests = Collections.unmodifiableList(builder.passiveTests);
 		this.optionText = builder.optionText;
 		this.attemptText = builder.attemptText;
 		this.passText = builder.passText;
